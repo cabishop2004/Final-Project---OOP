@@ -11,7 +11,7 @@
 
 **Team Members:**
 - Caleb Bishop
-- Eric [Last Name]
+- Eric Dellet
 
 ## Project Overview
 
