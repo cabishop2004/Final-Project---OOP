@@ -1,0 +1,16 @@
+Congressional Stock Trade Tracker and Alert System
+Under the STOCK Act, members of the U.S. Congress must publicly disclose certain 
+securities transactions. However, these filings are scattered across government websites 
+and third-party providers, making them difficult to monitor. This project proposes a Python 
+application that consolidates congressional trading disclosures and alerts users to newly 
+reported transactions.
+Using object-oriented design, a data provider class retrieves and normalizes records from 
+REST APIs into Politician, Trade, and Stock objects. AlertRule objects filter transactions by 
+politician, stock, transaction type, and reported value range. An AlertManager evaluates 
+new records and sends matches through interchangeable email or SMS notifier classes. 
+Encapsulation, inheritance, and polymorphism support modularity and future expansion.
+The application will handle API errors, rate limits, and duplicate records, with unit tests 
+using mocked API responses. Because disclosures are delayed and transaction amounts 
+are reported as ranges, the tool is intended for informational rather than real-time or 
+predictive use. The project demonstrates object-oriented programming, API integration, 
+automated testing, and event-driven notifications.
