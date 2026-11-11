@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}
+Trade Feed · Congressional Trade Tracker
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <div>
+        <p class="eyebrow">
+            Congressional Stock Activity
+        </p>
+
+        <h1>
+            Follow financial disclosures from Congress.
+        </h1>
+
+        <p class="hero-copy">
+            Live House and Senate disclosure data is retrieved
+            through Financial Modeling Prep and normalized into
+            the application's internal trade model.
+        </p>
+    </div>
+
+    <div class="api-card">
+        <span
+            class="status-dot
+            {% if api_configured %}online{% else %}offline{% endif %}"
+        ></span>
+
+        {% if api_configured %}
+            FMP API configured
+        {% else %}
+            FMP API key required
+        {% endif %}
+    </div>
+
+</section>
+
+{% if error %}
+<div class="error-box">
+    <strong>API Error</strong>
+    <span>{{ error }}</span>
+</div>
+{% endif %}
+
+<section class="stats">
+
+    <article>
+        <span>Trades Displayed</span>
+        <strong>{{ trades|length }}</strong>
+    </article>
+
+    <article>
+        <span>Politicians</span>
+        <strong>{{ member_count }}</strong>
+    </article>
+
+    <article>
+        <span>Purchases</span>
+        <strong>{{ purchase_count }}</strong>
+    </article>
+
+    <article>
+        <span>Sales</span>
+        <strong>{{ sale_count }}</strong>
+    </article>
+
+</section>
+
+<section class="panel">
+
+    <div class="panel-heading">
+        <div>
+            <p class="eyebrow">
+                Disclosure Feed
+            </p>
+
+            <h2>
+                Recent Congressional Trades
+            </h2>
+        </div>
+    </div>
+
+    <form
+        class="filters"
+        method="get"
+    >
+
+        <input
+            type="text"
+            name="q"
+            value="{{ query }}"
+            placeholder="Politician, ticker, or company"
+        >
+
+        <select name="chamber">
+            <option value="">
+                All chambers
+            </option>
+
+            <option
+                value="house"
+                {% if chamber == "house" %}selected{% endif %}
+            >
+                House
+            </option>
+
+            <option
+                value="senate"
+                {% if chamber == "senate" %}selected{% endif %}
+            >
+                Senate
+            </option>
+        </select>
+
+        <select name="type">
+            <option value="">
+                All transactions
+            </option>
+
+            <option
+                value="purchase"
+                {% if trade_type == "purchase" %}selected{% endif %}
+            >
+                Purchases
+            </option>
+
+            <option
+                value="sale"
+                {% if trade_type == "sale" %}selected{% endif %}
+            >
+                Sales
+            </option>
+        </select>
+
+        <button type="submit">
+            Filter
+        </button>
+
+        <a
+            class="secondary-button"
+            href="{{ url_for('dashboard') }}"
+        >
+            Reset
+        </a>
+
+    </form>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Politician</th>
+                    <th>Chamber</th>
+                    <th>Ticker</th>
+                    <th>Transaction</th>
+                    <th>Amount</th>
+                    <th>Transaction Date</th>
+                    <th>Disclosed</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for trade in trades %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ trade.politician }}
+                        </strong>
+
+                        {% if trade.owner %}
+                        <small>
+                            Owner: {{ trade.owner }}
+                        </small>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ trade.chamber }}
+                    </td>
+
+                    <td>
+                        {% if trade.symbol != "N/A" %}
+                        <a
+                            class="ticker"
+                            href="{{ url_for(
+                                'stock_lookup',
+                                symbol=trade.symbol
+                            ) }}"
+                        >
+                            {{ trade.symbol }}
+                        </a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+
+                        <small>
+                            {{ trade.asset_description }}
+                        </small>
+                    </td>
+
+                    <td>
+                        <span
+                            class="trade-type
+                            {{ trade.trade_type.value|lower }}"
+                        >
+                            {{ trade.trade_type.value }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ trade.amount_range or "Unknown" }}
+                    </td>
+
+                    <td>
+                        {{ trade.transaction_date|display_date }}
+                    </td>
+
+                    <td>
+                        {{ trade.disclosure_date|display_date }}
+                    </td>
+
+                    <td>
+                        {% if trade.source_url %}
+                        <a
+                            href="{{ trade.source_url }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            Filing ↗
+                        </a>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td
+                        colspan="8"
+                        class="empty"
+                    >
+                        No trade records to display.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endblock %}

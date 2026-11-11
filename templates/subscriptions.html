@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block title %}
+Subscriptions · Congressional Trade Tracker
+{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+
+    <p class="eyebrow">
+        Alert Preferences
+    </p>
+
+    <h1>
+        Follow a politician or ticker.
+    </h1>
+
+    <p>
+        Create persistent alert rules that are checked
+        against newly disclosed congressional trades.
+    </p>
+
+</section>
+
+<section class="two-column">
+
+    <article class="panel">
+
+        <h2>
+            New Subscription
+        </h2>
+
+        <p class="muted">
+            Enter a politician, ticker, or both.
+        </p>
+
+        <form
+            method="post"
+            class="subscription-form"
+        >
+
+            <label>
+                Politician
+
+                <input
+                    type="text"
+                    name="politician"
+                    placeholder="Example: Nancy Pelosi"
+                >
+            </label>
+
+            <label>
+                Ticker
+
+                <input
+                    type="text"
+                    name="ticker"
+                    placeholder="Example: NVDA"
+                >
+            </label>
+
+            <label>
+                Transaction Type
+
+                <select name="trade_type">
+
+                    <option value="">
+                        Any transaction
+                    </option>
+
+                    <option value="Purchase">
+                        Purchase
+                    </option>
+
+                    <option value="Sale">
+                        Sale
+                    </option>
+
+                </select>
+
+            </label>
+
+            <label>
+                Alert Channel
+
+                <select name="channel">
+
+                    <option value="web">
+                        Web
+                    </option>
+
+                    <option value="email">
+                        Email
+                    </option>
+
+                    <option value="sms">
+                        SMS
+                    </option>
+
+                </select>
+
+            </label>
+
+            <button type="submit">
+                Create Subscription
+            </button>
+
+        </form>
+
+    </article>
+
+    <article class="panel">
+
+        <h2>
+            How Matching Works
+        </h2>
+
+        <div class="explanation-list">
+
+            <div>
+                <strong>Politician only</strong>
+                <span>
+                    Match every disclosed trade
+                    by that politician.
+                </span>
+            </div>
+
+            <div>
+                <strong>Ticker only</strong>
+                <span>
+                    Match any member of Congress
+                    trading that ticker.
+                </span>
+            </div>
+
+            <div>
+                <strong>Both</strong>
+                <span>
+                    Require both the politician
+                    and ticker to match.
+                </span>
+            </div>
+
+            <div>
+                <strong>Transaction Type</strong>
+                <span>
+                    Optionally restrict the rule
+                    to purchases or sales.
+                </span>
+            </div>
+
+        </div>
+
+    </article>
+
+</section>
+
+<section class="panel">
+
+    <div class="panel-heading">
+
+        <div>
+
+            <p class="eyebrow">
+                Saved Rules
+            </p>
+
+            <h2>
+                Current Subscriptions
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="subscription-list">
+
+        {% for subscription in subscriptions %}
+
+        <article class="subscription-card">
+
+            <div>
+
+                <strong>
+
+                    {% if subscription.politician %}
+
+                        {{ subscription.politician }}
+
+                    {% else %}
+
+                        Any politician
+
+                    {% endif %}
+
+                </strong>
+
+                <div class="subscription-details">
+
+                    {% if subscription.ticker %}
+
+                        <span>
+                            Ticker:
+                            {{ subscription.ticker }}
+                        </span>
+
+                    {% endif %}
+
+                    <span>
+
+                        Type:
+
+                        {% if subscription.trade_type %}
+
+                            {{ subscription.trade_type.value }}
+
+                        {% else %}
+
+                            Any
+
+                        {% endif %}
+
+                    </span>
+
+                    <span>
+                        Channel:
+                        {{ subscription.channel|upper }}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <form
+                method="post"
+                action="{{ url_for(
+                    'delete_subscription',
+                    subscription_id=subscription.subscription_id
+                ) }}"
+            >
+
+                <button
+                    type="submit"
+                    class="danger-button"
+                >
+                    Remove
+                </button>
+
+            </form>
+
+        </article>
+
+        {% else %}
+
+        <div class="empty">
+            You do not have any subscriptions yet.
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

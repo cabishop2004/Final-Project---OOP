@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Politicians - Congressional Stock Trade Tracker{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-header">
+        <h2>Politicians</h2>
+    </div>
+
+    <form class="filter-form" method="get" action="{{ url_for('politicians') }}">
+        <select name="chamber">
+            <option value="">All Chambers</option>
+            <option value="house" {% if chamber_filter == "house" %}selected{% endif %}>House</option>
+            <option value="senate" {% if chamber_filter == "senate" %}selected{% endif %}>Senate</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+
+    <div class="card-grid">
+        {% for politician in politicians %}
+        <div class="info-card">
+            <h3>{{ politician.name }}</h3>
+            <p><strong>Party:</strong> {{ politician.party }}</p>
+            <p><strong>Chamber:</strong> {{ politician.chamber }}</p>
+            <p><strong>State:</strong> {{ politician.state }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Congressional Stock Trade Tracker{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <h2>Track politicians, trades, and alerts</h2>
+        <p>
+            This dashboard is a frontend prototype for a system that monitors congressional
+            stock disclosures and helps users follow trade activity.
+        </p>
+    </div>
+
+    <form class="search-form" method="get" action="{{ url_for('home') }}">
+        <input type="text" name="search" placeholder="Search by politician, ticker, or company" value="{{ search }}">
+        <button type="submit">Search</button>
+    </form>
+</section>
+
+<section class="stats-grid">
+    <div class="stat-card">
+        <h3>{{ stats.politicians }}</h3>
+        <p>Politicians</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.trades }}</h3>
+        <p>Total Trades</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.subscriptions }}</h3>
+        <p>Subscriptions</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.buy_trades }}</h3>
+        <p>Buy Trades</p>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>Recent Trade Activity</h2>
+        <a href="{{ url_for('trades') }}">View all</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Politician</th>
+                    <th>Ticker</th>
+                    <th>Company</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Trade Date</th>
+                    <th>Disclosed</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trade in trades %}
+                <tr>
+                    <td>{{ trade.politician_name }}</td>
+                    <td>{{ trade.ticker }}</td>
+                    <td>{{ trade.company }}</td>
+                    <td>
+                        <span class="pill {{ trade.trade_type.lower() }}">{{ trade.trade_type }}</span>
+                    </td>
+                    <td>{{ trade.amount_range }}</td>
+                    <td>{{ trade.trade_date }}</td>
+                    <td>{{ trade.disclosed_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

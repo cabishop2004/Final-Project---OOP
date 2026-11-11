@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+Alerts · Congressional Trade Tracker
+{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+
+    <p class="eyebrow">
+        Alert Engine
+    </p>
+
+    <h1>
+        Matching congressional trades.
+    </h1>
+
+    <p>
+        This page performs one scheduler poll and compares
+        recent disclosures against your saved subscriptions.
+    </p>
+
+</section>
+
+{% if error %}
+
+<div class="error-box">
+
+    <strong>
+        Trade API Error
+    </strong>
+
+    <span>
+        {{ error }}
+    </span>
+
+</div>
+
+{% endif %}
+
+<section class="panel">
+
+    <div class="panel-heading">
+
+        <div>
+
+            <p class="eyebrow">
+                Poll Results
+            </p>
+
+            <h2>
+                {{ matches|length }}
+                Matching Alerts
+            </h2>
+
+        </div>
+
+        <a
+            class="secondary-button"
+            href="{{ url_for('alerts') }}"
+        >
+            Poll Again
+        </a>
+
+    </div>
+
+    <div class="alert-list">
+
+        {% for match in matches %}
+
+        <article class="alert-card">
+
+            <div class="alert-icon">
+                !
+            </div>
+
+            <div>
+
+                <strong>
+                    {{ match.trade.politician }}
+                    ·
+                    {{ match.trade.symbol }}
+                </strong>
+
+                <p>
+                    {{ match.message }}
+                </p>
+
+                <small>
+                    Matched subscription
+                    #{{ match.subscription.subscription_id }}
+                    ·
+                    {{ match.subscription.channel|upper }}
+                </small>
+
+            </div>
+
+        </article>
+
+        {% else %}
+
+        <div class="empty">
+
+            No recent trades currently match
+            your subscriptions.
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

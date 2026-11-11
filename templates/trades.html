@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Trades - Congressional Stock Trade Tracker{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-header">
+        <h2>Trade Feed</h2>
+    </div>
+
+    <form class="filter-form" method="get" action="{{ url_for('trades') }}">
+        <input type="text" name="politician" placeholder="Filter by politician" value="{{ politician_filter }}">
+        <select name="type">
+            <option value="">All Types</option>
+            <option value="buy" {% if trade_type_filter == "buy" %}selected{% endif %}>Buy</option>
+            <option value="sell" {% if trade_type_filter == "sell" %}selected{% endif %}>Sell</option>
+        </select>
+        <button type="submit">Apply Filters</button>
+    </form>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Politician</th>
+                    <th>Ticker</th>
+                    <th>Company</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Trade Date</th>
+                    <th>Disclosed</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trade in trades %}
+                <tr>
+                    <td>{{ trade.politician_name }}</td>
+                    <td>{{ trade.ticker }}</td>
+                    <td>{{ trade.company }}</td>
+                    <td><span class="pill {{ trade.trade_type.lower() }}">{{ trade.trade_type }}</span></td>
+                    <td>{{ trade.amount_range }}</td>
+                    <td>{{ trade.trade_date }}</td>
+                    <td>{{ trade.disclosed_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

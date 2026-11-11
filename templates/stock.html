@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}
+Stock Lookup · Congressional Trade Tracker
+{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <p class="eyebrow">
+        Market Data
+    </p>
+
+    <h1>
+        Stock Lookup
+    </h1>
+
+    <p>
+        Search for a ticker to retrieve its current
+        Financial Modeling Prep market quote.
+    </p>
+</section>
+
+<section class="panel">
+
+    <form
+        class="stock-search"
+        method="get"
+    >
+        <input
+            type="text"
+            name="symbol"
+            value="{{ symbol }}"
+            placeholder="Example: NVDA"
+            autocomplete="off"
+            required
+        >
+
+        <button type="submit">
+            Get Quote
+        </button>
+    </form>
+
+</section>
+
+{% if error %}
+
+<div class="error-box">
+    <strong>API Error</strong>
+    <span>{{ error }}</span>
+</div>
+
+{% endif %}
+
+{% if quote %}
+
+<section class="quote-card">
+
+    <div class="quote-heading">
+
+        <div>
+            <span class="ticker-large">
+                {{ quote.symbol }}
+            </span>
+
+            <h2>
+                {{ quote.company_name }}
+            </h2>
+        </div>
+
+        <div class="quote-price">
+
+            <strong>
+                {{ quote.price|money }}
+            </strong>
+
+            <span
+                class="
+                {% if quote.change >= 0 %}
+                    positive
+                {% else %}
+                    negative
+                {% endif %}
+                "
+            >
+                {% if quote.change >= 0 %}+{% endif %}
+                {{ quote.change|round(2) }}
+
+                (
+                {% if quote.change_percentage >= 0 %}+{% endif %}
+                {{ quote.change_percentage|round(2) }}%
+                )
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="quote-grid">
+
+        <div>
+            <span>Day Range</span>
+            <strong>
+                {{ quote.day_low|money }}
+                –
+                {{ quote.day_high|money }}
+            </strong>
+        </div>
+
+        <div>
+            <span>52 Week Range</span>
+            <strong>
+                {{ quote.year_low|money }}
+                –
+                {{ quote.year_high|money }}
+            </strong>
+        </div>
+
+        <div>
+            <span>Volume</span>
+            <strong>
+                {{ quote.volume|compact_number }}
+            </strong>
+        </div>
+
+        <div>
+            <span>Market Cap</span>
+            <strong>
+                ${{ quote.market_cap|compact_number }}
+            </strong>
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+{% endblock %}

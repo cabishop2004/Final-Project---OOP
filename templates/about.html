@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+About · Congressional Trade Tracker
+{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+
+    <p class="eyebrow">
+        CSCI 375 Final Project
+    </p>
+
+    <h1>
+        Congressional Stock Trade Tracker
+        and Alert System
+    </h1>
+
+    <p>
+        Built by Caleb Bishop and Eric Dellett.
+    </p>
+
+</section>
+
+<section class="architecture-grid">
+
+    <article class="panel">
+        <h2>Provider</h2>
+        <p>
+            FMPProvider communicates with the external
+            Financial Modeling Prep API.
+        </p>
+    </article>
+
+    <article class="panel">
+        <h2>Adapter</h2>
+        <p>
+            FMPAdapter converts third-party JSON into
+            internal Trade and StockQuote models.
+        </p>
+    </article>
+
+    <article class="panel">
+        <h2>Manager</h2>
+        <p>
+            MarketManager provides one application-level
+            interface to external market data.
+        </p>
+    </article>
+
+    <article class="panel">
+        <h2>Frontend</h2>
+        <p>
+            Flask routes and Jinja templates display
+            normalized congressional and stock data.
+        </p>
+    </article>
+
+</section>
+
+{% endblock %}
